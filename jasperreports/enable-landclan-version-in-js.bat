@@ -12,7 +12,7 @@ rem The install location on my local machine of the relevant jar file is:
 rem C:\Program Files\TIBCO\Jaspersoft Studio-6.19.1\configuration\org.eclipse.osgi\64\0\.cp\lib\jasperreports-6.19.1.jar
 
 rem If we do not already have a backup of the official build, make one now.
-set jarDir="C:\Program Files\TIBCO\Jaspersoft Studio-6.19.1\configuration\org.eclipse.osgi\64\0\.cp\lib"
+set jarDir="C:\Program Files\TIBCO\Jaspersoft Studio-6.19.1\configuration\org.eclipse.osgi\64\0\.cp\lib\"
 set jarFile="jasperreports-6.19.1.jar"
 set backupFile="%jarFile%.official"
 echo Checking for backup copy of official jar...
