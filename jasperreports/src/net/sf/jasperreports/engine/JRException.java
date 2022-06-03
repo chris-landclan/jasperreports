@@ -1,6 +1,6 @@
 /*
  * JasperReports - Free Java Reporting Library.
- * Copyright (C) 2001 - 2019 TIBCO Software Inc. All rights reserved.
+ * Copyright (C) 2001 - 2022 TIBCO Software Inc. All rights reserved.
  * http://www.jaspersoft.com
  *
  * Unless you have purchased a commercial license agreement from Jaspersoft,
@@ -43,14 +43,6 @@ public class JRException extends Exception
 	
 	private String messageKey;
 	private Object[] args;
-	/**
-	 * @deprecated To be removed.
-	 */
-	private JasperReportsContext jasperReportsContext;
-	/**
-	 * @deprecated To be removed.
-	 */
-	private Locale locale;
 
 
 	/**
@@ -94,24 +86,11 @@ public class JRException extends Exception
 	/**
 	 *
 	 */
-	public JRException(String messageKey, Object[] args)
+	public JRException(String messageKey, Object... args)
 	{
 		super(messageKey);
 		this.messageKey = messageKey;
 		this.args = args;
-	}
-
-
-	/**
-	 * @deprecated Replaced by {@link #JRException(String, Object[])}.
-	 */
-	public JRException(String messageKey, Object[] args, JasperReportsContext jasperReportsContext, Locale locale)
-	{
-		super(messageKey);
-		this.messageKey = messageKey;
-		this.args = args;
-		this.jasperReportsContext = jasperReportsContext;
-		this.locale = locale;
 	}
 
 
@@ -136,7 +115,7 @@ public class JRException extends Exception
 	@Override
 	public String getMessage()
 	{
-		return getMessage(jasperReportsContext, locale);
+		return getMessage(null, null);
 	}
 
 

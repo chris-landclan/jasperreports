@@ -1,6 +1,6 @@
 /*
  * JasperReports - Free Java Reporting Library.
- * Copyright (C) 2001 - 2019 TIBCO Software Inc. All rights reserved.
+ * Copyright (C) 2001 - 2022 TIBCO Software Inc. All rights reserved.
  * http://www.jaspersoft.com
  *
  * Unless you have purchased a commercial license agreement from Jaspersoft,
@@ -305,7 +305,7 @@ public final class JRPropertiesUtil
 		Map<String, String> properties = jasperReportsContext.getProperties();
 		
 		int prefixLength = prefix.length();
-		List<PropertySuffix> values = new ArrayList<PropertySuffix>();
+		List<PropertySuffix> values = new ArrayList<>();
 		for (Map.Entry<String, String> entry : properties.entrySet())
 		{
 			String name = entry.getKey();
@@ -363,7 +363,7 @@ public final class JRPropertiesUtil
 	public static List<PropertySuffix> getProperties(JRPropertiesMap propertiesMap, String prefix)
 	{
 		int prefixLength = prefix.length();
-		List<PropertySuffix> values = new ArrayList<PropertySuffix>();
+		List<PropertySuffix> values = new ArrayList<>();
 		if (propertiesMap != null)
 		{
 			String[] propertyNames = propertiesMap.getPropertyNames();
@@ -403,7 +403,7 @@ public final class JRPropertiesUtil
 		{
 			if (!global.isEmpty())
 			{
-				Set<String> ownSuffixes = new HashSet<String>();
+				Set<String> ownSuffixes = new HashSet<>();
 				for (Iterator<PropertySuffix> it = own.iterator(); it.hasNext();)
 				{
 					PropertySuffix prop = it.next();
@@ -610,6 +610,21 @@ public final class JRPropertiesUtil
 		return value == null ? null : asBoolean(value);
 	}
 	
+	/**
+	 * Returns the value of a property as an Integer, looking first in the supplied properties map
+	 * and then in the system properties.
+	 * 
+	 * @param propertiesMap the properties map
+	 * @param key the key
+	 * @return the property value
+	 */
+	public Integer getIntegerProperty(JRPropertiesMap propertiesMap, String key)
+	{
+		String value = getProperty(propertiesMap, key);
+		
+		return value == null || value.trim().length() == 0 ? null : asInteger(value);
+	}
+
 	/**
 	 * Returns the value of a property as an Integer, looking first in the supplied properties holder
 	 * and then in the system properties.

@@ -1,6 +1,6 @@
 /*
  * JasperReports - Free Java Reporting Library.
- * Copyright (C) 2001 - 2019 TIBCO Software Inc. All rights reserved.
+ * Copyright (C) 2001 - 2022 TIBCO Software Inc. All rights reserved.
  * http://www.jaspersoft.com
  *
  * Unless you have purchased a commercial license agreement from Jaspersoft,
@@ -54,7 +54,7 @@ public class JRBaseCrosstabMeasure implements JRCrosstabMeasure, Serializable, C
 	protected String name;
 	protected String valueClassName;
 	protected String valueClassRealName;
-	protected Class<?> valueClass;//FIXME transient
+	protected transient Class<?> valueClass;
 	protected JRExpression expression;
 	protected CalculationEnum calculationValue = CalculationEnum.COUNT;
 	protected String incrementerFactoryClassName;

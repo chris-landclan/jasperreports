@@ -1,6 +1,6 @@
 /*
  * JasperReports - Free Java Reporting Library.
- * Copyright (C) 2001 - 2019 TIBCO Software Inc. All rights reserved.
+ * Copyright (C) 2001 - 2022 TIBCO Software Inc. All rights reserved.
  * http://www.jaspersoft.com
  *
  * Unless you have purchased a commercial license agreement from Jaspersoft,
@@ -41,7 +41,6 @@ import net.sf.jasperreports.engine.JRPropertiesUtil;
 import net.sf.jasperreports.engine.JasperReportsContext;
 import net.sf.jasperreports.engine.util.JRStringUtil;
 import net.sf.jasperreports.engine.util.JRStyledText;
-import net.sf.jasperreports.export.CsvExporterConfiguration;
 import net.sf.jasperreports.export.CsvMetadataExporterConfiguration;
 import net.sf.jasperreports.export.CsvMetadataReportConfiguration;
 import net.sf.jasperreports.properties.PropertyConstants;
@@ -170,8 +169,8 @@ public class JRCsvMetadataExporter extends JRAbstractCsvExporter<CsvMetadataRepo
 	protected void exportPage(JRPrintPage page) throws IOException
 	{
 		List<JRPrintElement> elements = page.getElements();
-		Map<String, String> currentRow = new HashMap<String, String>();
-		Map<String, String> repeatedValues = new HashMap<String, String>();
+		Map<String, String> currentRow = new HashMap<>();
+		Map<String, String> repeatedValues = new HashMap<>();
 		CsvMetadataReportConfiguration configuration = getCurrentItemConfiguration(); 
 		boolean hasDefinedColumns = columnNames != null; // if columns where passed in as property
 		
@@ -256,7 +255,7 @@ public class JRCsvMetadataExporter extends JRAbstractCsvExporter<CsvMetadataRepo
 			{
 				if (columnNames == null) 
 				{
-					columnNames = new ArrayList<String>();
+					columnNames = new ArrayList<>();
 				}
 				
 				if (currentColumnName != null && currentColumnName.length() > 0 && !columnNames.contains(currentColumnName))
@@ -320,10 +319,6 @@ public class JRCsvMetadataExporter extends JRAbstractCsvExporter<CsvMetadataRepo
 	 */
 	protected void writeReportHeader() throws IOException 
 	{
-		CsvExporterConfiguration configuration = getCurrentConfiguration();
-		String fieldDelimiter = configuration.getFieldDelimiter();
-		String recordDelimiter = configuration.getRecordDelimiter();
-		
 		StringBuilder rowBuilder = new StringBuilder();
 		
 		for (int i = 0; i < columnNames.size(); i++)
@@ -361,9 +356,6 @@ public class JRCsvMetadataExporter extends JRAbstractCsvExporter<CsvMetadataRepo
 		// FIXME: the rows that are incomplete (e.g. in case of a group, there are rows that contain only the group columns 
 		// because the report spanned over a new page and it contains only the values for the group columns, as header, and other information
 		// that is not for export, like counts or totals) should not be written
-		CsvExporterConfiguration configuration = getCurrentConfiguration();
-		String fieldDelimiter = configuration.getFieldDelimiter();
-		String recordDelimiter = configuration.getRecordDelimiter();
 
 		StringBuilder rowBuilder = new StringBuilder();
 		boolean isEmptyRow = true;

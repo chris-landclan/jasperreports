@@ -1,6 +1,6 @@
 /*
  * JasperReports - Free Java Reporting Library.
- * Copyright (C) 2001 - 2019 TIBCO Software Inc. All rights reserved.
+ * Copyright (C) 2001 - 2022 TIBCO Software Inc. All rights reserved.
  * http://www.jaspersoft.com
  *
  * Unless you have purchased a commercial license agreement from Jaspersoft,
@@ -34,6 +34,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRRuntimeException;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.export.ExporterInputItem;
 import net.sf.jasperreports.export.SimpleExporterInput;
 
 
@@ -51,9 +52,19 @@ public class ParametersExporterInput extends SimpleExporterInput
 	 */
 	public ParametersExporterInput(Map<net.sf.jasperreports.engine.JRExporterParameter, Object> parameters)
 	{
-		super(getItems(getJasperPrintList(parameters)));
+		super(getInputItems(parameters));
 	}
 
+	@SuppressWarnings("unchecked")
+	private static List<ExporterInputItem> getInputItems(Map<net.sf.jasperreports.engine.JRExporterParameter, Object> parameters)
+	{
+		List<ExporterInputItem> items = (List<ExporterInputItem>) parameters.get(net.sf.jasperreports.engine.JRExporterParameter.INPUT_ITEM_LIST);
+		if (items == null)
+		{
+			items = getItems(getJasperPrintList(parameters));
+		}
+		return items;
+	}
 	
 	/**
 	 * 
@@ -113,7 +124,7 @@ public class ParametersExporterInput extends SimpleExporterInput
 				}
 			}
 			
-			jasperPrintList = new ArrayList<JasperPrint>();
+			jasperPrintList = new ArrayList<>();
 			jasperPrintList.add(jasperPrint);
 		}
 		else

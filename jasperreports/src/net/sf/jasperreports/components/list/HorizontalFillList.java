@@ -1,6 +1,6 @@
 /*
  * JasperReports - Free Java Reporting Library.
- * Copyright (C) 2001 - 2019 TIBCO Software Inc. All rights reserved.
+ * Copyright (C) 2001 - 2022 TIBCO Software Inc. All rights reserved.
  * http://www.jaspersoft.com
  *
  * Unless you have purchased a commercial license agreement from Jaspersoft,
@@ -54,6 +54,7 @@ public class HorizontalFillList extends BaseFillList
 
 	private int overflowStartPage;
 	private int overflowColumnIndex;
+	private boolean advancedToNext;
 	
 	public HorizontalFillList(ListComponent component, JRFillObjectFactory factory) throws JRException
 	{
@@ -69,7 +70,7 @@ public class HorizontalFillList extends BaseFillList
 				createDatasetExpressionEvaluator());
 		FillListContents fillContents = new FillListContents(
 				listContents, datasetFactory);
-		this.contentsList = new ArrayList<FillListContents>();
+		this.contentsList = new ArrayList<>();
 		this.contentsList.add(fillContents);
 	}
 
@@ -83,7 +84,7 @@ public class HorizontalFillList extends BaseFillList
 		FillListContents listContents = list.contentsList.get(0);
 		FillListContents contentsClone = new FillListContents(listContents, factory);
 		
-		this.contentsList = new ArrayList<FillListContents>();
+		this.contentsList = new ArrayList<>();
 		this.contentsList.add(contentsClone);
 	}
 
@@ -125,6 +126,7 @@ public class HorizontalFillList extends BaseFillList
 				
 				datasetRun.start();
 				fillStarted = true;
+				advancedToNext = false;
 				
 				// reset the overflow page
 				overflowStartPage = 0;
@@ -136,6 +138,7 @@ public class HorizontalFillList extends BaseFillList
 			// also breaks when there are no more records, see below
 			while(!overflow)
 			{
+				boolean refillOverflowed = columnIndex < overflowColumnIndex;
 				int contentsAvailableHeight = availableHeight 
 						- printFrame.getHeight();
 				if (contentsAvailableHeight < contentsHeight)
@@ -146,12 +149,36 @@ public class HorizontalFillList extends BaseFillList
 						log.debug("Not enough space left for a list row, overflowing");
 					}
 					
+					if (!refillOverflowed && !advancedToNext)
+					{
+						advancedToNext = datasetRun.next();
+						if (!advancedToNext)
+						{
+							//no more records
+							break;
+						}
+					}
+
 					overflow = true;
 				}
 				else
 				{
-					boolean refillOverflowed = columnIndex < overflowColumnIndex;
-					if (!refillOverflowed && !datasetRun.next())
+					boolean hasNextContents;
+					if (refillOverflowed)
+					{
+						hasNextContents = true;
+					}
+					else if (advancedToNext)
+					{
+						hasNextContents = true;
+						advancedToNext = false;
+					}
+					else
+					{
+						hasNextContents = datasetRun.next();
+					}
+					
+					if (!hasNextContents)
 					{
 						// no more records
 						break;
@@ -354,6 +381,7 @@ public class HorizontalFillList extends BaseFillList
 
 		overflowStartPage = 0;
 		overflowColumnIndex = 0;
+		advancedToNext = false;
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 /*
  * JasperReports - Free Java Reporting Library.
- * Copyright (C) 2001 - 2019 TIBCO Software Inc. All rights reserved.
+ * Copyright (C) 2001 - 2022 TIBCO Software Inc. All rights reserved.
  * http://www.jaspersoft.com
  *
  * Unless you have purchased a commercial license agreement from Jaspersoft,
@@ -100,7 +100,7 @@ public class DataSourceDataAdapterService extends
 				}
 			}
 			catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException 
-				| IllegalAccessException | InstantiationException e) 
+				| IllegalAccessException | InstantiationException | NoClassDefFoundError e) 
 			{
 				throw new JRException(e);			
 			} 

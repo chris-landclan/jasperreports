@@ -1,6 +1,6 @@
 /*
  * JasperReports - Free Java Reporting Library.
- * Copyright (C) 2001 - 2019 TIBCO Software Inc. All rights reserved.
+ * Copyright (C) 2001 - 2022 TIBCO Software Inc. All rights reserved.
  * http://www.jaspersoft.com
  *
  * Unless you have purchased a commercial license agreement from Jaspersoft,
@@ -93,6 +93,11 @@ public class JRExporterParameter
 	 * @deprecated Replaced by {@link SimpleExporterInput#getInstance(java.util.List)}.
 	 */
 	public static final JRExporterParameter JASPER_PRINT_LIST = new JRExporterParameter("JasperPrint List");
+
+	/**
+	 * @deprecated Replace by {@link SimpleExporterInput#SimpleExporterInput(java.util.List)}
+	 */
+	public static final JRExporterParameter INPUT_ITEM_LIST = new JRExporterParameter("ExporterInputItem List");
 
 
 	/**

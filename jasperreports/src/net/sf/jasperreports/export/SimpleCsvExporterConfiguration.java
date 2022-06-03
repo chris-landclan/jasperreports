@@ -1,6 +1,6 @@
 /*
  * JasperReports - Free Java Reporting Library.
- * Copyright (C) 2001 - 2019 TIBCO Software Inc. All rights reserved.
+ * Copyright (C) 2001 - 2022 TIBCO Software Inc. All rights reserved.
  * http://www.jaspersoft.com
  *
  * Unless you have purchased a commercial license agreement from Jaspersoft,
@@ -34,6 +34,7 @@ public class SimpleCsvExporterConfiguration extends SimpleExporterConfiguration 
 	private String recordDelimiter;	
 	private Boolean forceFieldEnclosure;	
 	private Boolean isWriteBOM;	
+	private Boolean escapeFormula;	
 
 	/**
 	 * 
@@ -112,4 +113,17 @@ public class SimpleCsvExporterConfiguration extends SimpleExporterConfiguration 
 		this.forceFieldEnclosure = forceFieldEnclosure;
 	}
 	
+	@Override
+	public Boolean getEscapeFormula()
+	{
+		return escapeFormula;
+	}
+	
+	/**
+	 * 
+	 */
+	public void setEscapeFormula(Boolean escapeFormula)
+	{
+		this.escapeFormula = escapeFormula;
+	}	
 }

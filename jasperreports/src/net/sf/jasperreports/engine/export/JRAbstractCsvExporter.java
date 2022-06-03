@@ -1,6 +1,6 @@
 /*
  * JasperReports - Free Java Reporting Library.
- * Copyright (C) 2001 - 2019 TIBCO Software Inc. All rights reserved.
+ * Copyright (C) 2001 - 2022 TIBCO Software Inc. All rights reserved.
  * http://www.jaspersoft.com
  *
  * Unless you have purchased a commercial license agreement from Jaspersoft,
@@ -37,6 +37,7 @@ import java.util.StringTokenizer;
 
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRAbstractExporter;
+import net.sf.jasperreports.engine.JRCommonText;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRGenericElementType;
 import net.sf.jasperreports.engine.JRPrintPage;
@@ -44,6 +45,7 @@ import net.sf.jasperreports.engine.JRPrintText;
 import net.sf.jasperreports.engine.JRPropertiesUtil;
 import net.sf.jasperreports.engine.JasperReportsContext;
 import net.sf.jasperreports.engine.util.JRStyledText;
+import net.sf.jasperreports.engine.util.JRStyledTextUtil;
 import net.sf.jasperreports.export.CsvExporterConfiguration;
 import net.sf.jasperreports.export.CsvReportConfiguration;
 import net.sf.jasperreports.export.ExportInterruptedException;
@@ -60,6 +62,7 @@ public abstract class JRAbstractCsvExporter<RC extends CsvReportConfiguration, C
 {
 	public static final String BOM_CHARACTER = "\uFEFF";
 	public static final String DEFAULT_ENCLOSURE = "\"";
+	public static final String ESCAPE_FORMULA_CHARACTERS = "=+-@";
 	protected static final String CSV_EXPORTER_PROPERTIES_PREFIX = JRPropertiesUtil.PROPERTY_PREFIX + "export.csv.";
 
 	/**
@@ -67,6 +70,12 @@ public abstract class JRAbstractCsvExporter<RC extends CsvReportConfiguration, C
 	 * {@link GenericElementHandlerEnviroment#getElementHandler(JRGenericElementType, String)}.
 	 */
 	public static final String CSV_EXPORTER_KEY = JRPropertiesUtil.PROPERTY_PREFIX + "csv";
+
+	protected String fieldDelimiter;
+	protected String recordDelimiter;
+	protected boolean forceFieldEnclosure;
+	protected String quotes;
+	protected boolean escapeFormula;
 
 	/**
 	 *
@@ -188,7 +197,14 @@ public abstract class JRAbstractCsvExporter<RC extends CsvReportConfiguration, C
 	@Override
 	public JRStyledText getStyledText(JRPrintText textElement)
 	{
-		return textElement.getFullStyledText(noneSelector);
+		JRStyledText styledText = textElement.getFullStyledText(noneSelector);
+		
+		if (styledText != null && !JRCommonText.MARKUP_NONE.equals(textElement.getMarkup()))
+		{
+			styledText = JRStyledTextUtil.getBulletedText(styledText);
+		}
+
+		return styledText;
 	}
 
 
@@ -201,23 +217,10 @@ public abstract class JRAbstractCsvExporter<RC extends CsvReportConfiguration, C
 		
 		if (source != null)
 		{
-			CsvExporterConfiguration configuration = getCurrentConfiguration();
-			String fieldDelimiter = configuration.getFieldDelimiter();
-			String recordDelimiter = configuration.getRecordDelimiter();
-			boolean putQuotes = configuration.getForceFieldEnclosure();
-			
-			// single character used for field enclosure; white spaces are not considered; default value is "
-			String quotes = configuration.getFieldEnclosure().trim().length() == 0 
-					? DEFAULT_ENCLOSURE 
-					: configuration.getFieldEnclosure().trim().substring(0, 1);
-
-			if (
-				source.indexOf(fieldDelimiter) >= 0
-				|| source.indexOf(recordDelimiter) >= 0
-				)
-			{
-				putQuotes = true;
-			}
+			boolean putQuotes = 
+				forceFieldEnclosure
+				|| source.indexOf(fieldDelimiter) >= 0
+				|| source.indexOf(recordDelimiter) >= 0;
 			
 			StringBuilder sb = new StringBuilder();
 			StringTokenizer tkzer = new StringTokenizer(source, quotes+"\n", true);
@@ -244,6 +247,11 @@ public abstract class JRAbstractCsvExporter<RC extends CsvReportConfiguration, C
 			
 			str = sb.toString();
 			
+			if (escapeFormula && !str.isEmpty() && ESCAPE_FORMULA_CHARACTERS.indexOf(str.charAt(0)) >= 0)
+			{
+				str = " " + str;
+			}
+			
 			if (putQuotes)
 			{
 				str = quotes + str + quotes;
@@ -257,6 +265,18 @@ public abstract class JRAbstractCsvExporter<RC extends CsvReportConfiguration, C
 	protected void initExport()
 	{
 		super.initExport();
+
+		CsvExporterConfiguration configuration = getCurrentConfiguration();
+		fieldDelimiter = configuration.getFieldDelimiter();
+		recordDelimiter = configuration.getRecordDelimiter();
+		forceFieldEnclosure = configuration.getForceFieldEnclosure();
+		
+		// single character used for field enclosure; white spaces are not considered; default value is "
+		quotes = configuration.getFieldEnclosure().trim().length() == 0 
+				? DEFAULT_ENCLOSURE 
+				: configuration.getFieldEnclosure().trim().substring(0, 1);
+
+		escapeFormula = configuration.getEscapeFormula();
 	}
 	
 	

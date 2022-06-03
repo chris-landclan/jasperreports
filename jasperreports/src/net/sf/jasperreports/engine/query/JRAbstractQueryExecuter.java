@@ -1,6 +1,6 @@
 /*
  * JasperReports - Free Java Reporting Library.
- * Copyright (C) 2001 - 2019 TIBCO Software Inc. All rights reserved.
+ * Copyright (C) 2001 - 2022 TIBCO Software Inc. All rights reserved.
  * http://www.jaspersoft.com
  *
  * Unless you have purchased a commercial license agreement from Jaspersoft,
@@ -196,7 +196,7 @@ public abstract class JRAbstractQueryExecuter implements JRQueryExecuter
 	/**
 	 * Clause function registry.
 	 */
-	protected final Map<String,JRClauseFunction> clauseFunctions = new HashMap<String,JRClauseFunction>();
+	protected final Map<String,JRClauseFunction> clauseFunctions = new HashMap<>();
 	
 	private final QueryExecutionContext context;
 	private final JRPropertiesUtil propertiesUtil;
@@ -236,7 +236,7 @@ public abstract class JRAbstractQueryExecuter implements JRQueryExecuter
 		this.parametersMap = parametersMap;
 		
 		queryString = "";
-		queryParameters = new ArrayList<QueryParameterEntry>();
+		queryParameters = new ArrayList<>();
 	}
 
 	/**
@@ -363,7 +363,7 @@ public abstract class JRAbstractQueryExecuter implements JRQueryExecuter
 	 */
 	protected void parseQuery()
 	{
-		parameterClauseStack = new HashSet<String>();
+		parameterClauseStack = new HashSet<>();
 		
 		JRQuery query = dataset.getQuery();
 		
@@ -638,7 +638,7 @@ public abstract class JRAbstractQueryExecuter implements JRQueryExecuter
 	 */
 	protected List<String> getCollectedParameterNames()
 	{
-		List<String> parameterNames = new ArrayList<String>(queryParameters.size());
+		List<String> parameterNames = new ArrayList<>(queryParameters.size());
 		for (Iterator<QueryParameterEntry> it = queryParameters.iterator(); it.hasNext();)
 		{
 			QueryParameterEntry paramEntry = it.next();
@@ -664,7 +664,7 @@ public abstract class JRAbstractQueryExecuter implements JRQueryExecuter
 	 */
 	protected List<QueryParameter> getCollectedParameters()
 	{
-		List<QueryParameter> params = new ArrayList<QueryParameter>(queryParameters.size());
+		List<QueryParameter> params = new ArrayList<>(queryParameters.size());
 		for (QueryParameterEntry parameterEntry : queryParameters)
 		{
 			if (!(parameterEntry instanceof QueryParameter))
@@ -834,6 +834,83 @@ public abstract class JRAbstractQueryExecuter implements JRQueryExecuter
 	protected Boolean getBooleanParameterOrProperty(String name)
 	{
 		return getBooleanParameter(name, name);
+	}
+	
+	
+	
+	
+	/**
+	 * 
+	 */
+	protected int getIntegerParameter(String parameter, String property, int defaultValue)
+	{
+		if (parameterHasValue(parameter))
+		{
+			Integer integerValue = (Integer)getParameterValue(parameter, true);
+			if (integerValue == null)
+			{
+				return getPropertiesUtil().getIntegerProperty(property);
+			}
+			else
+			{
+				return integerValue;
+			}
+		}
+		else
+		{
+			return 
+				getPropertiesUtil().getIntegerProperty(
+					dataset.getPropertiesMap(),
+					property,
+					defaultValue
+					);
+		}
+	}
+	
+	
+	/**
+	 * 
+	 */
+	protected int getIntegerParameterOrProperty(String name, int defaultValue)
+	{
+		return getIntegerParameter(name, name, defaultValue);
+	}
+	
+	
+	/**
+	 * 
+	 */
+	protected Integer getIntegerParameter(String parameter, String property)
+	{
+		if (parameterHasValue(parameter))
+		{
+			Integer integerValue = (Integer)getParameterValue(parameter, true);
+			if (integerValue == null)
+			{
+				return getPropertiesUtil().getIntegerProperty(property);
+			}
+			else
+			{
+				return integerValue;
+			}
+		}
+		else
+		{
+			return 
+				getPropertiesUtil().getIntegerProperty(
+					dataset.getPropertiesMap(),
+					property
+					);
+		}
+	}
+	
+	
+	/**
+	 * 
+	 */
+	protected Integer getIntegerParameterOrProperty(String name)
+	{
+		return getIntegerParameter(name, name);
 	}
 	
 	
