@@ -10,12 +10,12 @@ rem script 'enable-landclan-version-in-js.bat' was run and re-instates it as the
 rem official jar.
 
 rem The install location on my local machine of the relevant jar file is:
-rem C:\Program Files\TIBCO\Jaspersoft Studio-6.17.0\configuration\org.eclipse.osgi\68\0\.cp\lib\jasperreports-6.17.0.jar
+rem C:\Program Files\TIBCO\Jaspersoft Studio-6.19.1\configuration\org.eclipse.osgi\64\0\.cp\lib\jasperreports-6.19.1.jar
 
 rem If we do not already have a backup of the official build then it is to be assumed that the counterpart batch script
 rem has not been run so there is nothing to do.
-set jarDir="C:\Program Files\TIBCO\Jaspersoft Studio-6.17.0\configuration\org.eclipse.osgi\68\0\.cp\lib\"
-set jarFile="jasperreports-6.17.0.jar"
+set jarDir="C:\Program Files\TIBCO\Jaspersoft Studio-6.19.1\configuration\org.eclipse.osgi\64\0\.cp\lib\"
+set jarFile="jasperreports-6.19.1.jar"
 set backupFile="%jarFile%.official"
 echo Checking for backup copy of official jar...
 if exist %jarDir%%backupFile% (
